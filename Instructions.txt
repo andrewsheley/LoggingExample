@@ -1,0 +1,68 @@
+https://www.carlrippon.com/asp-net-core-logging-with-serilog-and-sql-server/
+
+
+
+
+Install Nugets:
+	Serilog.AspNetCore
+	Serilog.Settings.Configuration
+	Serilog.Sinks.MSSqlServer
+
+
+Add logger to Configure services before add.mvc():
+	 // Serilog
+	 Log.Logger = new LoggerConfiguration()
+	 .ReadFrom.Configuration(Configuration)
+	 .CreateLogger();
+
+
+Add to applicationsettings.json:
+"Serilog": {
+	"MinimumLevel": "Information",
+	"WriteTo": [
+	  {
+		"Name": "MSSqlServer",
+		"Args": {
+		  "connectionString": "Server=(local)\\sqlexpress;Database=TestDB;user id=sqluser;pwd=Password01!;MultipleActiveResultSets=true;",
+		  "tableName": "Log"
+		}
+	  }
+	]
+  },
+
+  
+
+Create Database Table LOG:
+CREATE TABLE [Log] (
+ 
+   [Id] int IDENTITY(1,1) NOT NULL,
+   [Message] nvarchar(max) NULL,
+   [MessageTemplate] nvarchar(max) NULL,
+   [Level] nvarchar(128) NULL,
+   [TimeStamp] datetimeoffset(7) NOT NULL,  
+   [Exception] nvarchar(max) NULL,
+   [Properties] xml NULL,
+   [LogEvent] nvarchar(max) NULL
+ 
+   CONSTRAINT [PK_Log] 
+	 PRIMARY KEY CLUSTERED ([Id] ASC) 
+ 
+) 
+
+Add Logging Code:
+	  Log.Error(exx, exx.StackTrace);
+
+	  Log.Fatal(exx.Message, exx, exx.StackTrace);
+
+	  Log.Information("Contact {@contactId} not found", e);
+
+	  Exception ex = new Exception("Oh my god something went wrong. . . . . . .");
+	  Log.Error(ex, ex.Message);
+
+	  Log.Fatal(ex.Message, ex, ex.Source, ex.ToString(), ex.StackTrace);
+	  Log.Error(ex.Message, ex, ex.Source, ex.ToString(), ex.StackTrace);
+
+
+
+
+

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace LoggingExample
 {
@@ -21,6 +22,14 @@ namespace LoggingExample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Serilog
+            Log.Logger = new LoggerConfiguration()
+             .ReadFrom.Configuration(Configuration)
+             .CreateLogger();
+
+
+
+
             services.AddMvc();
         }
 
